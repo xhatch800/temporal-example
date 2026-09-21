@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: temporal-example
+
+temporal:
+  # Temporal gRPC address — matches both 'temporal server start-dev' and docker-compose
+  service-address: localhost:7233
+  activities:
+    # Set to true to watch Temporal retry processPayment twice before succeeding
+    simulate-payment-failure: false

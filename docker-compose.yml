@@ -1,0 +1,33 @@
+version: "3.5"
+
+services:
+  postgresql:
+    container_name: temporal-postgresql
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_PASSWORD: temporal
+      POSTGRES_USER: temporal
+
+  temporal:
+    container_name: temporal
+    image: temporalio/auto-setup:1.24.2
+    depends_on:
+      - postgresql
+    environment:
+      - DB=postgres12
+      - DB_PORT=5432
+      - POSTGRES_USER=temporal
+      - POSTGRES_PWD=temporal
+      - POSTGRES_SEEDS=postgresql
+    ports:
+      - "7233:7233"
+
+  temporal-ui:
+    container_name: temporal-ui
+    image: temporalio/ui:2.26.2
+    depends_on:
+      - temporal
+    environment:
+      - TEMPORAL_ADDRESS=temporal:7233
+    ports:
+      - "8233:8080"   # UI internal port is 8080, exposed on 8233
